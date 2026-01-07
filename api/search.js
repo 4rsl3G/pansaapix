@@ -1,13 +1,11 @@
+import { proxy } from "./_utils.js"
+
 export default async function handler(req, res) {
-  const BASE = process.env.SHORTMAX_API_BASE
-  const TOKEN = process.env.SHORTMAX_TOKEN
   const lang = req.query.lang || "en"
   const q = req.query.q || ""
-  const r = await fetch(`${BASE}/search?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}`, {
-    headers: { Authorization: `Bearer ${TOKEN}` }
-  })
-  const text = await r.text()
-  res.status(r.status)
-  res.setHeader("content-type", r.headers.get("content-type") || "application/json")
-  res.send(text)
+  return proxy(
+    req,
+    res,
+    `/search?q=${encodeURIComponent(q)}&lang=${encodeURIComponent(lang)}`
+  )
 }
